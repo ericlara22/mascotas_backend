@@ -2,7 +2,7 @@ const {UserService} = require('../services');
 
 module.exports = {
 
-    createUser: async (req, res) => {
+    create: async (req, res) => {
         try {
             const {nombre, apellido_materno, apellido_paterno, rut} = req.body;
             if (nombre && apellido_materno && apellido_paterno && rut){            
@@ -20,20 +20,20 @@ module.exports = {
         }
     },
     
-    getAllUsers: async (req, res) => {
+    findAll: async (req, res) => {
         try {
-            const result = await UserService.getAllUsers();
+            const result = await UserService.getAllUsers(req.query);
             if(result.length === 0){
                 return res.status(400).json({message: 'No se encuentran usuarios registrados', data: result});
             } else {
-                return res.status(400).json({message: 'Usuarios obtenidos con éxito', data: result});
+                return res.status(200).json({message: 'Usuarios obtenidos con éxito', data: result});
             }
         } catch (error) {
             return res.status(400).json({message: error.message});
         }
     },
 
-    getUserById: async (req, res) => {
+    findById: async (req, res) => {
         try {
             const {id} = req.params;
             const result = await UserService.getUserById(id);
@@ -47,6 +47,7 @@ module.exports = {
         }
     },
 
+    /*
     getUserByRut: async (req, res) => {
         try {
             const {rut} = req.query;
@@ -60,8 +61,9 @@ module.exports = {
             return res.status(400).json({message: error.message});
         }
     },
+    */
 
-    editUser: async (req, res) => {
+    update: async (req, res) => {
         try {
             const {id} = req.params;
             const userResult = await UserService.getUserById(id);
@@ -76,6 +78,6 @@ module.exports = {
         }
     },
 
-    deleteUser: async (req, res) => {
+    delete: async (req, res) => {
     }
 }

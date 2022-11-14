@@ -1,6 +1,6 @@
 module.exports = {
     
-    getAllCiudades : async () => {
+    getAllPersonas : async () => {
         try {
             
         } catch (error) {
@@ -8,7 +8,7 @@ module.exports = {
         }
     },
 
-    getCiudadById: async (id) => {
+    getPersonaById: async (id) => {
         try {
             /*
             const animal = await AnimalModel.findByPk(id);
@@ -23,7 +23,7 @@ module.exports = {
         }
     },
 
-    createCiudad: async (params) => {
+    createPersona: async (params) => {
         try {
            
         } catch (error) {
@@ -31,7 +31,7 @@ module.exports = {
         }
     },
 
-    updateCiudad: async (params) => {
+    updatePersona: async (params) => {
         try {
             
             
@@ -41,7 +41,7 @@ module.exports = {
         }
     },
 
-    deleteCiudad: async (id) => {
+    deletePersona: async (id) => {
         try {
             
         } catch (error) {

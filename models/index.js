@@ -1,7 +1,6 @@
 const {development} = require('../config/config.json');
 const {database, username, password, host, dialect} = development;
 const Sequelize = require('sequelize');
-const EstadoModel = require('./EstadoModel');
 
 const sequelize = new Sequelize(database, username, password, {
     host,

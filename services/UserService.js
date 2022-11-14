@@ -1,10 +1,9 @@
-const db = require('../models');
-const {models: {UserModel, PersonaModel}} = db;
+const {models: {UserModel, PersonaModel}} = require('../models');
 
 
 module.exports = {
 
-    getAllUsers: async ()=> {
+    getAllUsers: async (params)=> {
         try {
             const {count, rows} = await PersonaModel.findAndCountAll();
             return rows;
