@@ -1,0 +1,11 @@
+{
+    "development": {
+        "host": "localhost",
+        "username": "root",
+        "password": "",
+        "database": "Mascotas",
+        "dialect": "mysql",
+        "secret": "SECRET_KEY",
+        "expires": "9h"
+    }
+}
