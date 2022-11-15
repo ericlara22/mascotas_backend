@@ -4,7 +4,7 @@ module.exports = {
     
     createAnimal: async (params) => {
         try {
-           
+            
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }

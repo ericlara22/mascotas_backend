@@ -3,11 +3,17 @@ const {models: {UserModel, PersonaModel}} = require('../models');
 
 module.exports = {
 
-    getAllUsers: async (params)=> {
+    getAllUsers: async (params, pagination)=> {
         try {
-            const {count, rows} = await PersonaModel.findAndCountAll();
-            return rows;
+            const {page, size} = pagination;
+            
+            const users = await PersonaModel.findAndCountAll({
+                limit: size, 
+                offset: page * size
+            });
+            return users;
         } catch (error) {
+            console.log(error);
             throw Error('Error al consultar usuarios')
         }
     },
@@ -15,11 +21,12 @@ module.exports = {
     getUserById: async (id) => {
         try {
             const user = await PersonaModel.findByPk(id);
-            if(!user){
-                return {data: null, message: `Usuario ${id} no encontrado`}
-            } else {
-                return {data: user, message: 'Usuario encontrado con éxito'}
-            }
+            return user;
+            // if(!user){
+            //     return {data: null, message: `Usuario ${id} no encontrado`}
+            // } else {
+            //     return {data: user, message: 'Usuario encontrado con éxito'}
+            // }
         } catch (error) {
             throw Error('Error al consultar usuarios')
         }
@@ -28,11 +35,12 @@ module.exports = {
     getUserByRut: async (rut) => {
         try {
             const user = await PersonaModel.findOne({where: {rut}});
-            if(!user){
-                return {data: null, message: `Usuario con el rut ${rut} no encontrado`}
-            } else {
-                return {data: user, message: 'Usuario encontrado con éxito'}
-            }
+            return user;
+            // if(!user){
+            //     return {data: null, message: `Usuario con el rut ${rut} no encontrado`}
+            // } else {
+            //     return {data: user, message: 'Usuario encontrado con éxito'}
+            // }
         } catch (error) {
             throw Error('Error al consultar usuarios')
         }
@@ -41,13 +49,12 @@ module.exports = {
     createUser: async (params) => {
         try {
             const {nombre, apellido_materno, apellido_paterno, rut} = params;
-            const user = await PersonaModel.findOne({where: {rut}})
-            if(user) {
-                return {data:null, message: 'Rut de usuario ya registrado'};
+            const {user, created} = await PersonaModel.findOrCreate({where: {rut}, defaults: {nombre, apellido_materno, apellido_paterno, rut}})
+            if (created){
+                return user;
             } else {
-                const response = await PersonaModel.create({nombre, apellido_materno, apellido_paterno, rut})
-                return {data: response, message: 'Usuario creado con éxito'};
-            }
+                return null;
+            }   
         } catch (error) {
             throw Error('Error al consultar usuarios')
         }

@@ -1,8 +1,11 @@
+const {models: {EdadModel}} = require('../models');
+
 module.exports = {
     
     getAllEdades : async () => {
         try {
-            
+            const edades = await EdadModel.getAllEdades();
+            return edades;
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
@@ -10,14 +13,9 @@ module.exports = {
 
     getEdadById: async (id) => {
         try {
-            /*
-            const animal = await AnimalModel.findByPk(id);
-            if(!user){
-                return {data: null, message: `Usuario ${id} no encontrado`}
-            } else {
-                return {data: user, message: 'Usuario encontrado con éxito'}
-            }
-            */
+            
+            const edad = await EdadModel.findByPk(id);
+            return edad;
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }

@@ -7,13 +7,13 @@ module.exports = {
             const {nombre, apellido_materno, apellido_paterno, rut} = req.body;
             if (nombre && apellido_materno && apellido_paterno && rut){            
                 const result = await UserService.createUser(req.body);
-                if(result.data){
-                    return res.status(200).json(result);
+                if(result){
+                    return res.status(200).json({message: "Usuario creado", data:result});
                 } else {
-                    return res.status(400).json(result);
+                    return res.status(400).json({message:"Usuario ya se encuentra registrado",data:result});
                 }            
             } else {
-                return res.status(400).json({message: 'Ingrese los campos obligatorios'});
+                return res.status(400).json({message: 'Ingrese todos los campos obligatorios'});
             }
         } catch (error) {
             return res.status(400).json({message: error.message});
@@ -22,11 +22,27 @@ module.exports = {
     
     findAll: async (req, res) => {
         try {
-            const result = await UserService.getAllUsers(req.query);
-            if(result.length === 0){
-                return res.status(400).json({message: 'No se encuentran usuarios registrados', data: result});
+
+            //Paginación por query en la URL con parametros PAGE y SIZE
+            const pageAsNum = Number.parseInt(req.query.page);
+            const sizeAsNum = Number.parseInt(req.query.size);
+
+            let pagination ={};
+
+            !Number.isNaN(pageAsNum) && pageAsNum > 0
+            ? pagination.page = pageAsNum
+            : pagination.page = 0;
+
+            (!Number.isNaN(sizeAsNum) && sizeAsNum < 10 && sizeAsNum > 0)
+            ? pagination.size = sizeAsNum
+            : pagination.size = 10;
+
+            const result = await UserService.getAllUsers(req.query, pagination);
+            if(!result){
+                return res.status(400).json({message: 'No se encuentran usuarios registrados', data: null});
             } else {
-                return res.status(200).json({message: 'Usuarios obtenidos con éxito', data: result});
+                const totalPages = Math.ceil(result.count / pagination.size)
+                return res.status(200).json({message: 'Usuarios obtenidos con éxito', data: result.rows, totalPages});
             }
         } catch (error) {
             return res.status(400).json({message: error.message});
