@@ -13,7 +13,6 @@ module.exports = {
 
     getEdadById: async (id) => {
         try {
-            
             const edad = await EdadModel.findByPk(id);
             return edad;
         } catch (error) {
