@@ -1,46 +1,94 @@
-const {models: {EdadModel}} = require('../models');
+const {models: { EdadModel: Model }} = require('../models');
+const target = 'edad';
 
 module.exports = {
     
-    getAllEdades : async () => {
+    create: async (params) => {
         try {
-            const edades = await EdadModel.getAllEdades();
-            return edades;
+            let result = {};
+            const [data, created] = await Model.upsert(params)
+            if(created){
+                result.message = `Nuevo registro de ${target} creado`
+                result.data = data
+            } else {
+                result.message = `Registro de ${target} ya existe`
+                result.data = null;
+            }
+            return result
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
     },
 
-    getEdadById: async (id) => {
+    findAll: async (params, pagination) => {
         try {
-            const edad = await EdadModel.findByPk(id);
-            return edad;
+            let result = {};
+            const {page, size: limit} = pagination
+            result.data = await Model.findAndCountAll( {
+                limit,
+                offset: page * limit,
+                where: params
+            });
+            if(result.data.count === 0){
+                result.message = `No hay registros de ${target} que mostrar`
+            } else {
+                result.message = `Registro de ${target} encontrado`
+            }
+            return result;
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
     },
 
-    createEdad: async (params) => {
+    getOneById: async (id) => {
         try {
-           
+            let result = {};
+            result.data = await Model.findByPk(id);
+            if(!result.data){
+                result.message = `No hay registros de ${target} que mostrar con id ${id}`
+            } else {
+                result.message = `Registro de ${target} encontrado`
+            }
+            return result;
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
     },
 
-    updateEdad: async (params) => {
+    update: async (id, query) => {
         try {
-            
-            
+            let result = {}
+            await Model.findByPk(id, {raw: true}).then( async elemento => {
+                if (!elemento){
+                    result.message = `No hay registros de ${target} que mostrar con id ${id}`
+                    return result.data = null
+                } else {
+                    await Model.update(query, {where: {id}}).then( async () => {
+                        result.message = `Registro de ${target} editado`
+                        result.data = await Model.findByPk(id, {raw: true});
+                    })
+                }       
+            })
+            return result;
+
         } catch (error) {
             console.log(error.message)
             throw Error('Error al consultar base de datos')
         }
     },
 
-    deleteEdad: async (id) => {
+    delete: async (id) => {
         try {
-            
+            let result = {}
+            result.data = await Model.findByPk(id, {raw: true})
+            if(!result.data){
+                result.message = `No hay registros de ${target} que mostrar con id ${id}`
+                result.data = null
+            } else {
+                await Model.destroy({where: {id}})
+                result.message = `Registro de ${target} eliminado con éxito`
+            }
+            return result
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }

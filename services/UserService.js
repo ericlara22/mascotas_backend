@@ -1,82 +1,97 @@
-const {models: {UserModel, PersonaModel}} = require('../models');
+const {models: {UserModel: Model}} = require('../models');
+const target = 'usuario';
 
 
 module.exports = {
-
-    getAllUsers: async (params, pagination)=> {
+    
+    create: async (params) => {
         try {
-            const {page, size} = pagination;
-            
-            const users = await PersonaModel.findAndCountAll({
-                limit: size, 
-                offset: page * size
-            });
-            return users;
-        } catch (error) {
-            console.log(error);
-            throw Error('Error al consultar usuarios')
-        }
-    },
-
-    getUserById: async (id) => {
-        try {
-            const user = await PersonaModel.findByPk(id);
-            return user;
-            // if(!user){
-            //     return {data: null, message: `Usuario ${id} no encontrado`}
-            // } else {
-            //     return {data: user, message: 'Usuario encontrado con éxito'}
-            // }
-        } catch (error) {
-            throw Error('Error al consultar usuarios')
-        }
-    },
-
-    getUserByRut: async (rut) => {
-        try {
-            const user = await PersonaModel.findOne({where: {rut}});
-            return user;
-            // if(!user){
-            //     return {data: null, message: `Usuario con el rut ${rut} no encontrado`}
-            // } else {
-            //     return {data: user, message: 'Usuario encontrado con éxito'}
-            // }
-        } catch (error) {
-            throw Error('Error al consultar usuarios')
-        }
-    },
-
-    createUser: async (params) => {
-        try {
-            const {nombre, apellido_materno, apellido_paterno, rut} = params;
-            const {user, created} = await PersonaModel.findOrCreate({where: {rut}, defaults: {nombre, apellido_materno, apellido_paterno, rut}})
-            if (created){
-                return user;
+            let result = {};
+            const [data, created] = await Model.findOrCreate({where: {correo:params.correo}, defaults: params})
+            if(created){
+                result.message = `Nuevo registro de ${target} creado`
+                result.data = data
             } else {
-                return null;
-            }   
+                result.message = `Registro de ${target} ya existe`
+                result.data = null;
+            }
+            return result
         } catch (error) {
-            throw Error('Error al consultar usuarios')
+            throw Error('Error al consultar base de datos')
         }
     },
 
-    updateUser: async (userData, params) => {
+    findAll: async (params, pagination) => {
         try {
-            let user = userData.toJSON();
-
-            const {nombre=user.nombre, apellido_materno=user.apellido_materno, apellido_paterno=user.apellido_paterno, rut=user.rut} = params; 
-            await PersonaModel.update({nombre, apellido_paterno, apellido_materno, rut}, 
-                {where:{id: user.id},
+            let result = {};
+            const {page, size: limit} = pagination
+            result.data = await Model.findAndCountAll( {
+                limit,
+                offset: page * limit,
+                where: params
             });
-            user = await PersonaModel.findByPk(user.id);
-            if(!user){
-                return {data:null, message: 'Error al editar usuario'}
+            if(result.data.count === 0){
+                result.message = `No hay registros de ${target} que mostrar`
             } else {
-                return {data: user, message: `Usuario ${user.id} editado con éxito`}
-            }          
+                result.message = `Registro de ${target} encontrado`
+            }
+            return result;
+        } catch (error) {
+            throw Error('Error al consultar base de datos')
+        }
+    },
+
+    getOneById: async (id) => {
+        try {
+            let result = {};
+            result.data = await Model.findByPk(id);
+            if(!result.data){
+                result.message = `No hay registros de ${target} que mostrar con id ${id}`
+            } else {
+                result.message = `Registro de ${target} encontrado`
+            }
+            return result;
+        } catch (error) {
+            throw Error('Error al consultar base de datos')
+        }
+    },
+
+    update: async (id, query) => {
+        try {
+            let result = {}
+            await Model.findByPk(id, {raw: true}).then( async elemento => {
+                if (!elemento){
+                    result.message = `No hay registros de ${target} que mostrar con id ${id}`
+                    return result.data = null
+                } else {
+                    await Model.update(query, {where: {id}}).then( async () => {
+                        result.message = `Registro de ${target} editado`
+                        result.data = await Model.findByPk(id, {raw: true});
+                    })
+                }       
+            })
+            return result;
+
         } catch (error) {
             console.log(error.message)
-            throw Error('Error al consultar usuarios')
+            throw Error('Error al consultar base de datos')
         }
     },
+
+    delete: async (id) => {
+        try {
+            let result = {}
+            result.data = await Model.findByPk(id, {raw: true})
+            if(!result.data){
+                result.message = `No hay registros de ${target} que mostrar con id ${id}`
+                result.data = null
+            } else {
+                await Model.destroy({where: {id}})
+                result.message = `Registro de ${target} eliminado con éxito`
+            }
+            return result
+        } catch (error) {
+            throw Error('Error al consultar base de datos')
+        }
+    }
 }

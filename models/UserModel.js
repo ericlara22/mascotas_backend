@@ -2,7 +2,10 @@ module.exports = (sequelize, DataTypes) => {
 
     const UserModel = sequelize.define('user', 
     {
-        correo: DataTypes.STRING,
+        correo: {
+            type: DataTypes.STRING,
+            unique: true 
+        },
         contrasena: DataTypes.STRING,
     },
     {

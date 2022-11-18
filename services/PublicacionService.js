@@ -1,55 +1,88 @@
-const {models: {PublicacionModel}} = require('../models');
-const UserService = require('./UserService');
+const {models: { PublicacionModel: Model }} = require('../models');
+const target = 'publicacion';
 
 module.exports = {
     
-    getAllPublicaciones : async (params) => {
+    create: async (params) => {
         try {
-
-            const publicaciones = await PublicacionModel.findAll();
-            return publicaciones;
+            let result = {};         
+            result.data = await Model.create(params, {raw: true})
+            result.message = `Nuevo registro de ${target} creado`
+            return result
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
     },
 
-    getPublicacionById: async (id) => {
+    findAll: async (params, pagination) => {
         try {
-            
-            const publicacion = await PublicacionModel.findByPk(id);
-            if(!publicacion){
-                return {data: null, message: `Publicacion ${id} no existe`}
+            let result = {};
+            const {page, size: limit} = pagination
+            result.data = await Model.findAndCountAll( {
+                limit,
+                offset: page * limit,
+                where: params
+            });
+            if(result.data.count === 0){
+                result.message = `No hay registros de ${target} que mostrar`
             } else {
-                return {data: publicacion, message: 'Publicación encontrada con éxito'}
+                result.message = `Registro de ${target} encontrado`
             }
-            
+            return result;
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
     },
 
-    createPublicacion: async (params) => {
+    getOneById: async (id) => {
         try {
-           
+            let result = {};
+            result.data = await Model.findByPk(id);
+            if(!result.data){
+                result.message = `No hay registros de ${target} que mostrar con id ${id}`
+            } else {
+                result.message = `Registro de ${target} encontrado`
+            }
+            return result;
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
     },
 
-    updatePublicacion: async (id, params) => {
+    update: async (id, query) => {
         try {
-            const {titulo, descripcion, categoriaPublicacionId} = params;
-            await PublicacionModel.update( )
-            
+            let result = {}
+            await Model.findByPk(id, {raw: true}).then( async elemento => {
+                if (!elemento){
+                    result.message = `No hay registros de ${target} que mostrar con id ${id}`
+                    return result.data = null
+                } else {
+                    await Model.update(query, {where: {id}}).then( async () => {
+                        result.message = `Registro de ${target} editado`
+                        result.data = await Model.findByPk(id, {raw: true});
+                    })
+                }       
+            })
+            return result;
+
         } catch (error) {
             console.log(error.message)
             throw Error('Error al consultar base de datos')
         }
     },
 
-    deletePublicacion: async (id) => {
+    delete: async (id) => {
         try {
-            
+            let result = {}
+            result.data = await Model.findByPk(id, {raw: true})
+            if(!result.data){
+                result.message = `No hay registros de ${target} que mostrar con id ${id}`
+                result.data = null
+            } else {
+                await Model.destroy({where: {id}})
+                result.message = `Registro de ${target} eliminado con éxito`
+            }
+            return result
         } catch (error) {
             throw Error('Error al consultar base de datos')
         }
