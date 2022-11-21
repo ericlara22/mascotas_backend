@@ -1,4 +1,4 @@
-const {PersonaService} = require('../services');
+const {UserDataService} = require('../services');
 const paginationHelper = require('../helpers/pagination');
 
 module.exports = {
@@ -7,7 +7,7 @@ module.exports = {
         try {
             const {nombre, apellido_paterno, apellido_materno} = req.body;
             if(nombre, apellido_paterno, apellido_materno){
-                const result = await PersonaService.create(req.body)
+                const result = await UserDataService.create(req.body)
                 return res.status(200).json(result);
             } else {
                 return res.status(400).json({message: 'Faltan campos por completar', data: null});
@@ -22,7 +22,7 @@ module.exports = {
         try {
             const {page, size, ...params} = req.query;
             const pagination = paginationHelper(page, size)
-            const result = await PersonaService.findAll(params, pagination);
+            const result = await UserDataService.findAll(params, pagination);
             !result.data
             ? res.status(400).json(result)
             : res.status(200).json(result);
@@ -34,7 +34,7 @@ module.exports = {
     findOne: async (req, res) => {
         try {
             const {id} = req.params;
-            const result = await PersonaService.getOneById(id)
+            const result = await UserDataService.getOneById(id)
             !result.data
             ? res.status(400).json(result)
             : res.status(200).json(result);
@@ -53,7 +53,7 @@ module.exports = {
             razaId ? query.razaId = razaId : '';
             edadId ? query.edadId = edadId : '';
             categoriaMascotaId ? query.categoriaMascotaId = categoriaMascotaId : '';
-            const result = await PersonaService.update(id, query)
+            const result = await UserDataService.update(id, query)
             !result.data
             ? res.status(400).json(result)
             : res.status(200).json(result);
@@ -65,7 +65,7 @@ module.exports = {
     delete: async (req, res) => {
         try {
             const {id} = req.params;
-            const result = await PersonaService.delete(id)
+            const result = await UserDataService.delete(id)
             !result.data
             ? res.status(400).json(result)
             : res.status(200).json(result);

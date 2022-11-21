@@ -12,7 +12,7 @@ module.exports = {
       categoriaPublicacionId: 2,
       estadoId: 2,
       animalId: 1,
-      direccionId: 4,
+      comunaId: 4,
       createdAt: date,
       updatedAt: date
     },
@@ -24,7 +24,7 @@ module.exports = {
       categoriaPublicacionId: 3,
       estadoId: 2,
       animalId: 2,
-      direccionId: 3,
+      comunaId: 3,
       createdAt: date,
       updatedAt: date
     },
@@ -36,7 +36,7 @@ module.exports = {
       categoriaPublicacionId: 2,
       estadoId: 2,
       animalId: 3,
-      direccionId: 1,
+      comunaId: 1,
       createdAt: date,
       updatedAt: date
     },
@@ -48,7 +48,7 @@ module.exports = {
       categoriaPublicacionId: 1,
       estadoId: 2,
       animalId: 4,
-      direccionId: 2,
+      comunaId: 2,
       createdAt: date,
       updatedAt: date
     }], {});

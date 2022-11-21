@@ -1,4 +1,4 @@
-const {models: { PersonaModel: Model }} = require('../models');
+const {models: { UserDataModel: Model }} = require('../models');
 const target = 'persona';
 
 module.exports = {

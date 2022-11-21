@@ -5,12 +5,13 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     let date = new Date();
     
-    await queryInterface.bulkInsert('persona', [{
+    await queryInterface.bulkInsert('user_data', [{
       nombre: 'Ana',
       apellido_paterno: 'Rojas',
       apellido_materno: 'Perez',
-      rut: 1234-5,
-      direccionId: 1,
+      userId: 1,
+      direccionId: 2,
+      telefonoId: 2,
       createdAt: date,
       updatedAt: date
     },
@@ -19,8 +20,9 @@ module.exports = {
       nombre: 'Bernardo',
       apellido_paterno: 'Silva',
       apellido_materno: 'Hernandez',
-      rut: 3456-5,
-      direccionId: 2,
+      userId: 2,
+      direccionId: 4,
+      telefonoId: 2,
       createdAt: date,
       updatedAt: date
     },
@@ -29,8 +31,9 @@ module.exports = {
       nombre: 'Claudio',
       apellido_paterno: 'Garrido',
       apellido_materno: 'Gonzalez',
-      rut: 9876-5,
-      direccionId: 1,
+      userId: 3,
+      direccionId: 4,
+      telefonoId: 2,
       createdAt: date,
       updatedAt: date
     },
@@ -39,8 +42,9 @@ module.exports = {
       nombre: 'Daniel',
       apellido_paterno: 'Fernandoi',
       apellido_materno: 'Hernandez',
-      rut: 3541-6,
-      direccionId: 3,
+      userId: 4,
+      direccionId: 2,
+      telefonoId: 1,
       createdAt: date,
       updatedAt: date
     },
@@ -49,8 +53,9 @@ module.exports = {
       nombre: 'Patricio',
       apellido_paterno: 'Carrasco',
       apellido_materno: 'Lopez',
-      rut: 1232-1,
-      direccionId: 1,
+      userId: 5,
+      direccionId: 5,
+      telefonoId: 2,
       createdAt: date,
       updatedAt: date
     },
@@ -59,8 +64,9 @@ module.exports = {
       nombre: 'Cristobal',
       apellido_paterno: 'Reyes',
       apellido_materno: 'Rosales',
-      rut: 2347-6,
+      userId: 6,
       direccionId: 3,
+      telefonoId: 2,
       createdAt: date,
       updatedAt: date
     },
@@ -69,8 +75,9 @@ module.exports = {
       nombre: 'Javier',
       apellido_paterno: 'Donoso',
       apellido_materno: 'Islas',
-      rut: 1351-7,
-      direccionId: 2,
+      userId: 7,
+      direccionId: 5,
+      telefonoId: 1,
       createdAt: date,
       updatedAt: date
     },
@@ -79,8 +86,9 @@ module.exports = {
       nombre: 'Gloria',
       apellido_paterno: 'Lara',
       apellido_materno: 'Perez',
-      rut: 1234-5,
-      direccionId: 2,
+      userId: 8,
+      direccionId: 3,
+      telefonoId: 4,
       createdAt: date,
       updatedAt: date
     }

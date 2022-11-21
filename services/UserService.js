@@ -1,8 +1,47 @@
 const {models: {UserModel: Model}} = require('../models');
+const bcryptjs = require('bcryptjs')
+const jwt = require('jsonwebtoken');
 const target = 'usuario';
+const { development } = require('../config/config.json');
 
 
 module.exports = {
+
+    login: async (params) => {
+        try {
+            let result = {};
+            const {correo, clave} = params;
+            let data = await Model.findOne({where: {correo}})
+            if(!data){
+                result.message = `Correo de ${target} no registrado`;
+            } else {
+                const passhash = await bcryptjs.compare(clave, data.contrasena)
+                if(!passhash) {
+                    result.message = `Contraseña de ${target} incorrecta`;
+                    data = null;
+                }else{
+                    const token = jwt.sign(
+                        {
+                        data,
+                        },
+                        development.secret,
+                        { expiresIn: development.expires },
+                    );                  
+                    result = {
+                        data: {
+                            user:data,
+                            token
+                        }, 
+                        message: `Login de ${target} correcto`
+                    };
+                }
+            }
+            return result;            
+        } catch (error) {
+            console.log(error)
+            throw Error('Error al consultar base de datos')
+        }
+    },
     
     create: async (params) => {
         try {

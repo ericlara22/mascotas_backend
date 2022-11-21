@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 
-    const PersonaModel = sequelize.define('persona', 
+    const UserDataModel = sequelize.define('user_data', 
     {
         nombre: DataTypes.STRING,
         apellido_paterno: DataTypes.STRING,
@@ -10,6 +10,6 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true
     });
 
-    return PersonaModel;
+    return UserDataModel;
 
 };
