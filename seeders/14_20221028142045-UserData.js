@@ -11,6 +11,7 @@ module.exports = {
       correo: 'user1@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 1,
       createdAt: date,
       updatedAt: date
     },
@@ -19,6 +20,7 @@ module.exports = {
       correo: 'user2@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 2,
       createdAt: date,
       updatedAt: date
     },
@@ -27,6 +29,7 @@ module.exports = {
       correo: 'user3@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 3,
       createdAt: date,
       updatedAt: date
     },
@@ -35,6 +38,7 @@ module.exports = {
       correo: 'user4@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 4,
       createdAt: date,
       updatedAt: date
     },
@@ -43,6 +47,7 @@ module.exports = {
       correo: 'user5@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 5,
       createdAt: date,
       updatedAt: date
     },
@@ -51,6 +56,7 @@ module.exports = {
       correo: 'user6@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 6,
       createdAt: date,
       updatedAt: date
     },
@@ -59,6 +65,7 @@ module.exports = {
       correo: 'user7@test',
       contrasena: passHash,
       estadoId: 3,
+      userDataId: 7,
       createdAt: date,
       updatedAt: date
     },
@@ -67,6 +74,7 @@ module.exports = {
       correo: 'user8@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 8,
       createdAt: date,
       updatedAt: date
     },
@@ -75,6 +83,7 @@ module.exports = {
       correo: 'user9@test',
       contrasena: passHash,
       estadoId: 2,
+      userDataId: 9,
       createdAt: date,
       updatedAt: date
     },
@@ -83,6 +92,7 @@ module.exports = {
       correo: 'user10@test',
       contrasena: passHash,
       estadoId: 1,
+      userDataId: 10,
       createdAt: date,
       updatedAt: date
     }], {});

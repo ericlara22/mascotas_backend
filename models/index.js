@@ -41,6 +41,9 @@ db.models.ColorModel = require('./ColorModel')(sequelize, Sequelize.DataTypes);
  */
 db.models.EstadoModel.hasMany(db.models.UserModel,{onDelete: 'cascade'});
 db.models.UserModel.belongsTo(db.models.EstadoModel, {onDelete: 'cascade'});
+db.models.UserDataModel.hasOne(db.models.UserModel,{foreignKey:'userDataId', onDelete: 'cascade'});
+db.models.UserModel.belongsTo(db.models.UserDataModel, {foreignKey:'userDataId',onDelete: 'cascade'});
+
 
 /**
  * UserData
@@ -50,8 +53,6 @@ db.models.UserModel.belongsTo(db.models.EstadoModel, {onDelete: 'cascade'});
  db.models.UserDataModel.belongsTo(db.models.DireccionModel, {onDelete: 'cascade'});
  db.models.TelefonoModel.hasMany(db.models.UserDataModel,{onDelete: 'cascade'});
  db.models.UserDataModel.belongsTo(db.models.TelefonoModel, {onDelete: 'cascade'});
- db.models.UserModel.hasOne(db.models.UserDataModel,{onDelete: 'cascade'});
- db.models.UserDataModel.belongsTo(db.models.UserModel, {onDelete: 'cascade'});
 
 /**
  * Publicacion
@@ -99,7 +100,7 @@ db.models.RazaModel.hasMany(db.models.AnimalModel, {onDelete: 'cascade'});
 db.models.AnimalModel.belongsTo(db.models.RazaModel, {onDelete: 'cascade'});
 db.models.SexoModel.hasMany(db.models.AnimalModel, {onDelete: 'cascade'});
 db.models.AnimalModel.belongsTo(db.models.SexoModel, {onDelete: 'cascade'});
-db.models.CategoriaMascotaModel.hasMany(db.models.AnimalModel, {onDelete: 'cascade'});
+db.models.CategoriaMascotaModel.hasMany(db.models.AnimalModel, {foreignKey:'categoriaMascotaId', onDelete: 'cascade'});
 db.models.AnimalModel.belongsTo(db.models.CategoriaMascotaModel, {foreignKey:'categoriaMascotaId',onDelete: 'cascade'});
 db.models.ColorModel.belongsToMany(db.models.AnimalModel, {through: 'animal_color',onDelete: 'cascade'});
 db.models.AnimalModel.belongsToMany(db.models.ColorModel, {through: 'animal_color',onDelete: 'cascade'});

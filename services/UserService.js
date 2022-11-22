@@ -46,7 +46,7 @@ module.exports = {
     create: async (params) => {
         try {
             let result = {};
-            const [data, created] = await Model.findOrCreate({where: {correo:params.correo}, defaults: params})
+            const [data, created] = await Model.findOrCreate({where: {correo:params.correo}, defaults: params, raw: true})
             if(created){
                 result.message = `Nuevo registro de ${target} creado`
                 result.data = data

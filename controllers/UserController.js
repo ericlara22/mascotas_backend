@@ -27,55 +27,56 @@ module.exports = {
             const {nombre, apellido_paterno, apellido_materno, direccionNombre, direccionNumero, comuna, numTelefono, correo, password: contrasena} = req.body;
             if(nombre && apellido_paterno && apellido_materno && direccionNombre && direccionNumero && comuna && numTelefono && correo && contrasena){
                 const passHash = await bcryptjs.hash(contrasena, 8)
-
-                let paramsComuna = {
-                    nombre: comuna
+                
+                let paramsCorreo = {
+                    correo
                 }
 
-                const comunaId = await (await ComunaService.findOne(paramsComuna)).data.id;
+                registeredCorreo = await UserService.findAll(paramsCorreo)
 
-                let paramsDireccion = {
-                    nombre: direccionNombre,
-                    numero: direccionNumero,
-                    comunaId
-                }
-                
-                const direccionId = await (await DireccionService.create(paramsDireccion)).data.id;
-                
-                let paramsTelefono = {
-                    numero: numTelefono
-                }
-                
-                const telefonoId = await (await TelefonoService.create(paramsTelefono)).data.id;
-                
-                
-                
-                let paramsUser = {
-                    correo,
-                    contrasena: passHash,
-                    estadoId: 2,
-                    personaId: persona.data.id
-                }
+                console.log(registeredCorreo);
 
-                const result = await UserService.create(params)
-
-                let paramsUserData = {
-                    nombre, 
-                    apellido_paterno, 
-                    apellido_materno,
-                    direccionId,
-                    telefonoId,
-                    userId
-                }
-                
-                const userData = await UserDataService.create(paramsUserData);
+                if(registeredCorreo){
+                    return res.status(400).json({message: 'correo ya existe', data: null});
+                } else {
+                    const userId = user.data.id;
+                    let paramsComuna = {
+                        nombre: comuna
+                    }
+                    const comunaId = await (await ComunaService.findOne(paramsComuna)).data.id;
+                    let paramsDireccion = {
+                        nombre: direccionNombre,
+                        numero: direccionNumero,
+                        comunaId
+                    }        
+                    const direccionId = await (await DireccionService.create(paramsDireccion)).data.id;
+                    let paramsTelefono = {
+                        numero: numTelefono
+                    }              
+                    const telefonoId = await (await TelefonoService.create(paramsTelefono)).data.id;   
+                    let paramsUserData = {
+                        nombre, 
+                        apellido_paterno, 
+                        apellido_materno,
+                        direccionId,
+                        telefonoId,
+                        userId
+                    }             
+                    const userDataId = await (await UserDataService.create(paramsUserData)).data.id;
 
 
-                return res.status(200).json(result);
+                    let paramsUser = {
+                        correo,
+                        contrasena: passHash,
+                        estadoId: 2,
+                        userDataId
+                    }
+                    const result = await UserService.create(paramsUser);
+                    return res.status(200).json(result);
+                }            
             } else {
                 return res.status(400).json({message: 'Faltan campos por completar', data: null});
             }
-
         } catch (error) {
             return res.status(400).json({message: error.message});
         }

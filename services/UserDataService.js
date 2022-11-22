@@ -1,5 +1,5 @@
 const {models: { UserDataModel: Model }} = require('../models');
-const target = 'persona';
+const target = 'datos de usuario';
 
 module.exports = {
     
