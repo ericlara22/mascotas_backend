@@ -27,51 +27,30 @@ module.exports = {
             const {nombre, apellido_paterno, apellido_materno, direccionNombre, direccionNumero, comuna, numTelefono, correo, password: contrasena} = req.body;
             if(nombre && apellido_paterno && apellido_materno && direccionNombre && direccionNumero && comuna && numTelefono && correo && contrasena){
                 const passHash = await bcryptjs.hash(contrasena, 8)
-                
-                let paramsCorreo = {
-                    correo
-                }
-
-                registeredCorreo = await UserService.findAll(paramsCorreo)
-
-                console.log(registeredCorreo);
-
-                if(registeredCorreo){
+                registeredCorreo = await UserService.findOne({correo})
+                if(registeredCorreo.data){
                     return res.status(400).json({message: 'correo ya existe', data: null});
                 } else {
-                    const userId = user.data.id;
-                    let paramsComuna = {
-                        nombre: comuna
-                    }
-                    const comunaId = await (await ComunaService.findOne(paramsComuna)).data.id;
-                    let paramsDireccion = {
+                    const comunaId = await (await ComunaService.findOne({nombre: comuna})).data.id;   
+                    const direccionId = await (await DireccionService.create({
                         nombre: direccionNombre,
                         numero: direccionNumero,
                         comunaId
-                    }        
-                    const direccionId = await (await DireccionService.create(paramsDireccion)).data.id;
-                    let paramsTelefono = {
-                        numero: numTelefono
-                    }              
-                    const telefonoId = await (await TelefonoService.create(paramsTelefono)).data.id;   
-                    let paramsUserData = {
+                    })).data.id;        
+                    const telefonoId = await (await TelefonoService.create({numero: numTelefono})).data.id;           
+                    const userDataId = await (await UserDataService.create({
                         nombre, 
                         apellido_paterno, 
                         apellido_materno,
                         direccionId,
                         telefonoId,
-                        userId
-                    }             
-                    const userDataId = await (await UserDataService.create(paramsUserData)).data.id;
-
-
-                    let paramsUser = {
+                    })).data.id;
+                    const result = await UserService.create({
                         correo,
                         contrasena: passHash,
                         estadoId: 2,
                         userDataId
-                    }
-                    const result = await UserService.create(paramsUser);
+                    });
                     return res.status(200).json(result);
                 }            
             } else {
@@ -97,7 +76,6 @@ module.exports = {
 
     findOne: async (req, res) => {
         try {
-            console.log(req.params)
             const {id} = req.params;
             const result = await UserService.getOneById(id)
             !result.data
@@ -110,19 +88,33 @@ module.exports = {
 
     update: async (req, res) => {
         try {
-            let queryPersona = {}
+            let queryUserData = {}
             let queryUser = {}
             const {id} = req.params;
-            const {nombre='', apellido_paterno='', apellido_materno='', direccion='', correo='', password='',estadoId=''} = req.body;
-            nombre ? queryPersona.nombre = nombre : '';
-            apellido_paterno ? queryPersona.apellido_paterno = apellido_paterno : '';
-            apellido_materno ? Persona.apellido_materno = apellido_materno : '';
-            direccion ? queryPersona.direccion = direccion : '';
+            const {nombre='', apellido_paterno='', apellido_materno='', direccion='', comuna= '',telefono='',correo='', password='',estadoId=''} = req.body;
+            
+            let user = await UserService.getOneById(id); 
+            const userData = await (await UserDataService.getOneById(user.data.userDataId)).data;
+
+            if(nombre || apellido_paterno || apellido_materno){
+                nombre ? queryUserData.nombre = nombre : '';
+                apellido_paterno ? queryUserData.apellido_paterno = apellido_paterno : '';
+                apellido_materno ? queryUserData.apellido_materno = apellido_materno : '';
+                await UserDataService.update(userData.id, queryUserData)
+            }
+
+            direccion ? await DireccionService.update(userData.direccionId, {nombre: direccion}) : '';
+            telefono ? await TelefonoService.update(userData.telefonoId, {numero: telefono}) : '';
+ 
+            if(password){
+                const passHash = await bcryptjs.hash(password, 8)
+                queryUser.password = password;
+            }
+            
             correo ? queryUser.correo = correo : '';
-            password ? queryUser.password = password : '';
             estadoId ? queryUser.estadoId = estadoId : '';
 
-            const result = await UserService.update(id, query)
+            const result = await UserService.update(id, queryUser)
             !result.data
             ? res.status(400).json(result)
             : res.status(200).json(result);

@@ -37,7 +37,7 @@ module.exports = {
     getOneById: async (id) => {
         try {
             let result = {};
-            result.data = await Model.findByPk(id);
+            result.data = await Model.findByPk(id, {raw: true});
             if(!result.data){
                 result.message = `No hay registros de ${target} que mostrar con id ${id}`
             } else {

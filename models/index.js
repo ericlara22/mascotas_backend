@@ -42,7 +42,7 @@ db.models.ColorModel = require('./ColorModel')(sequelize, Sequelize.DataTypes);
 db.models.EstadoModel.hasMany(db.models.UserModel,{onDelete: 'cascade'});
 db.models.UserModel.belongsTo(db.models.EstadoModel, {onDelete: 'cascade'});
 db.models.UserDataModel.hasOne(db.models.UserModel,{foreignKey:'userDataId', onDelete: 'cascade'});
-db.models.UserModel.belongsTo(db.models.UserDataModel, {foreignKey:'userDataId',onDelete: 'cascade'});
+db.models.UserModel.belongsTo(db.models.UserDataModel, {foreignKey:'userDataId',onDelete: 'cascade', as: 'userdata'});
 
 
 /**
