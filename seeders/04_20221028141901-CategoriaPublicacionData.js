@@ -9,18 +9,21 @@ module.exports = {
       nombre: 'En Adpoción',
       createdAt: date,
       updatedAt: date
+      //QUIERO ADOPTAR
     },
 
     {
       nombre: 'Busco mi Mascota',
       createdAt: date,
       updatedAt: date
+      //LO ENCONTRÉ
     },
 
     {
       nombre: 'Busco Dueño',
       createdAt: date,
       updatedAt: date
+      //ES MI MASCOTA
     }], {});
     
   },

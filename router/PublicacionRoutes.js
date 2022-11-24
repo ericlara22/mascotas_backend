@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authentication = require('../middlewares/authentication');
+const imgUpload = require('../middlewares/uploadImage');
 const {PublicacionController} = require('../controllers');
 
 
@@ -9,5 +10,6 @@ router.get('/:id', PublicacionController.findOne);
 router.post('/', authentication, PublicacionController.create);
 router.put('/disable/:id', authentication, PublicacionController.disable);
 router.put('/:id', authentication, PublicacionController.update);
+router.post('/:id/img', imgUpload.single('file'), PublicacionController.uploadImg)
 
 module.exports = router;

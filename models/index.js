@@ -31,6 +31,7 @@ db.models.RazaModel = require('./RazaModel')(sequelize, Sequelize.DataTypes);
 db.models.SexoModel = require('./SexoModel')(sequelize, Sequelize.DataTypes);
 db.models.TelefonoModel = require('./TelefonoModel')(sequelize, Sequelize.DataTypes);
 db.models.ColorModel = require('./ColorModel')(sequelize, Sequelize.DataTypes);
+db.models.ImageModel = require('./ImageModel')(sequelize, Sequelize.DataTypes);
 
 /**
  * Associations
@@ -104,6 +105,13 @@ db.models.CategoriaMascotaModel.hasMany(db.models.AnimalModel, {foreignKey:'cate
 db.models.AnimalModel.belongsTo(db.models.CategoriaMascotaModel, {foreignKey:'categoriaMascotaId',onDelete: 'cascade'});
 db.models.ColorModel.belongsToMany(db.models.AnimalModel, {through: 'animal_color',onDelete: 'cascade'});
 db.models.AnimalModel.belongsToMany(db.models.ColorModel, {through: 'animal_color',onDelete: 'cascade'});
+
+/**
+ * Image
+ */
+
+ db.models.PublicacionModel.hasMany(db.models.ImageModel, {onDelete: 'cascade'});
+ db.models.ImageModel.belongsTo(db.models.PublicacionModel, {onDelete: 'cascade'});
 
 
 module.exports = db;

@@ -1,5 +1,6 @@
 const {PublicacionService, AnimalService, CategoriaMascotaService, CategoriaPublicacionService, EdadService, SexoService, ColorService, ComunaService, RazaService, EstadoService} = require('../services');
 const paginationHelper = require('../helpers/pagination');
+const imgHelper = require('../helpers/imgHelper');
 
 module.exports = {
 
@@ -118,5 +119,18 @@ module.exports = {
         } catch (error) {
             return res.status(400).json({message: error.message});
         }
+    },
+
+    uploadImg: async (req, res) => {
+        const {id} = req.params;
+        const publicaciones = await (await PublicacionService.getOneById(id)).data;
+
+        const filename = req.file.filename;
+        const sqrImgDir = `./optimized/square-${filename}`;
+        const regImgDir = `./optimized/medium-${filename}`;
+        imgHelper.regular(req.file.path, `medium-${filename}`, 700);
+        imgHelper.square(req.file.path, `square-${filename}`, 600);
+
+        res.send( {data: 'Imagen cargada'})
     }
 }
