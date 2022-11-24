@@ -70,7 +70,7 @@ module.exports = {
       sexoId: 1,
       razaId: 4,
       edadId: 1,
-      categoriaMascotaId: 1,
+      categoriaMascotaId: 4,
       createdAt: date,
       updatedAt: date
     } 
