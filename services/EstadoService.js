@@ -40,6 +40,23 @@ module.exports = {
         }
     },
 
+    findOne: async (params) => {
+
+        try {
+            let result = {};
+            result.data = await Model.findOne( {where: params, raw: true, });
+            if(!result.data){
+                result.message = `No hay registros de ${target} que mostrar`
+            } else {
+                result.message = `Registro de ${target} encontrado`
+            }
+            return result;
+        } catch (error) {
+            console.log(error);
+            throw Error('Error al consultar base de datos')
+        }
+    },
+
     getOneById: async (id) => {
         try {
             let result = {};

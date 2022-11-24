@@ -91,7 +91,7 @@ module.exports = {
             let queryUserData = {}
             let queryUser = {}
             const {id} = req.params;
-            const {nombre='', apellido_paterno='', apellido_materno='', direccion='', comuna= '',telefono='',correo='', password='',estadoId=''} = req.body;
+            const {nombre, apellido_paterno, apellido_materno, direccion, comuna, telefono, correo, password, estadoId} = req.body;
             
             let user = await UserService.getOneById(id); 
             const userData = await (await UserDataService.getOneById(user.data.userDataId)).data;

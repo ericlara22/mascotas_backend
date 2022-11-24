@@ -1,12 +1,11 @@
 const {models: { AnimalModel: Model }} = require('../models');
 const target = 'animal';
-const Op = require('sequelize');
 
 module.exports = {
     
     create: async (params) => {
         try {
-            let result = {};         
+            let result = {};    
             result.data = await Model.create(params, {raw: true})
             result.message = `Nuevo registro de ${target} creado`
             return result

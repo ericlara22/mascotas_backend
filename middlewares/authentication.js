@@ -6,7 +6,7 @@ const verifyToken = (req, res, next) => {
         if(err) {
             return res.status(401).json({message: 'Token no válido'});
         }
-        req.userAuth = decoded.user;
+        req.userAuth = decoded.data;
         return next();
     });
 };

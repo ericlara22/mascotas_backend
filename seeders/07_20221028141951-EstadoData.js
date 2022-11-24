@@ -27,7 +27,17 @@ module.exports = {
       nombre: 'Desactivado',
       createdAt: date,
       updatedAt: date
-    }], {});
+    },
+
+    {
+      nombre: 'Admin',
+      createdAt: date,
+      updatedAt: date
+    }
+  
+  
+  
+  ], {});
     
   },
 

@@ -21,7 +21,7 @@ module.exports = {
             result.data = await Model.findAndCountAll( {
                 limit,
                 offset: page * limit,
-                where: params
+                where: {estadoId:2, ...params}
             });
             if(result.data.count === 0){
                 result.message = `No hay registros de ${target} que mostrar`
