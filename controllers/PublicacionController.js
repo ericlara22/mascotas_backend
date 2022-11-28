@@ -1,4 +1,4 @@
-const {PublicacionService, AnimalService, CategoriaMascotaService, CategoriaPublicacionService, EdadService, SexoService, ColorService, ComunaService, RazaService, EstadoService} = require('../services');
+const {PublicacionService, AnimalService, CategoriaMascotaService, CategoriaPublicacionService, EdadService, SexoService, ColorService, ComunaService, RazaService, EstadoService, ImageService} = require('../services');
 const paginationHelper = require('../helpers/pagination');
 const imgHelper = require('../helpers/imgHelper');
 
@@ -123,14 +123,23 @@ module.exports = {
 
     uploadImg: async (req, res) => {
         const {id} = req.params;
-        const publicaciones = await (await PublicacionService.getOneById(id)).data;
-
+        const publicacionId = await (await PublicacionService.getOneById(id)).data.id;
         const filename = req.file.filename;
         const sqrImgDir = `./optimized/square-${filename}`;
         const regImgDir = `./optimized/medium-${filename}`;
+        const image = await ImageService.create({publicacionId, square: sqrImgDir, regular: regImgDir });
         imgHelper.regular(req.file.path, `medium-${filename}`, 700);
         imgHelper.square(req.file.path, `square-${filename}`, 600);
 
         res.send( {data: 'Imagen cargada'})
+    },
+
+    deleteImg: async (req, res) => {
+        const {id} = req.params;
+        const {id:imgId} = req.query;
+        const image = await ImageService.delete({id: imgId});
+        const publicacion = await (await PublicacionService.getOneById(id)).data;
+
+        res.send( {message: 'Imagen eliminada', data: publicacion})
     }
 }

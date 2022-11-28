@@ -1,4 +1,4 @@
-const {models: { PublicacionModel: Model }} = require('../models');
+const {models: { PublicacionModel: Model, ImageModel }} = require('../models');
 const target = 'publicacion';
 
 module.exports = {
@@ -21,7 +21,10 @@ module.exports = {
             result.data = await Model.findAndCountAll( {
                 limit,
                 offset: page * limit,
-                where: {estadoId:2, ...params}
+                where: {estadoId:2, ...params},
+                include: {
+                    model: ImageModel
+                }
             });
             if(result.data.count === 0){
                 result.message = `No hay registros de ${target} que mostrar`
@@ -37,7 +40,7 @@ module.exports = {
     getOneById: async (id) => {
         try {
             let result = {};
-            result.data = await Model.findByPk(id);
+            result.data = await Model.findByPk(id, {include: ImageModel});
             if(!result.data){
                 result.message = `No hay registros de ${target} que mostrar con id ${id}`
             } else {

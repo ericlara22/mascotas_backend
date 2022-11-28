@@ -16,5 +16,6 @@ services.PublicacionService = require('./PublicacionService');
 services.RazaService = require('./RazaService');
 services.SexoService = require('./SexoService');
 services.TelefonoService = require('./TelefonoService');
+services.ImageService = require('./ImageService');
 
 module.exports = services;
