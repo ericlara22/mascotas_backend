@@ -1,4 +1,4 @@
-const {models: { PublicacionModel: Model, ImageModel }} = require('../models');
+const {models: { PublicacionModel: Model, ImageModel, UserModel, UserDataModel, AnimalModel }} = require('../models');
 const target = 'publicacion';
 
 module.exports = {
@@ -40,7 +40,7 @@ module.exports = {
     getOneById: async (id) => {
         try {
             let result = {};
-            result.data = await Model.findByPk(id, {include: ImageModel});
+            result.data = await Model.findByPk(id, {include:[ {model: ImageModel}, {model: AnimalModel}, {model: UserModel, include: [{model: UserDataModel, as: 'userdata' }]} ]});
             if(!result.data){
                 result.message = `No hay registros de ${target} que mostrar con id ${id}`
             } else {
@@ -48,6 +48,7 @@ module.exports = {
             }
             return result;
         } catch (error) {
+            console.log(error)
             throw Error('Error al consultar base de datos')
         }
     },
