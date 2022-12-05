@@ -7,8 +7,10 @@ module.exports = {
     create: async (req, res) => {
         try {
             const {titulo, descripcion, estadoId=2, comuna, categPubli, animal, categAnimal, edad, raza, sexo, color } = req.body;
+            const filename = req.file.filename;
+
             const {userAuth} = req;
-            if(titulo, descripcion, comuna, categPubli, animal, categAnimal){
+            if(titulo, descripcion, comuna, categPubli, animal, categAnimal, filename){
                 let query = {};
                 edad ? query.edadId = await (await EdadService.findOne({años: edad})).data.id: '';
                 raza ? query.razaId = await (await RazaService.findOne({nombre: raza})).data.id: '';
@@ -29,7 +31,15 @@ module.exports = {
                     comunaId,
                     categoriaPublicacionId,
                     userId: userAuth.id
-                })               
+                }) 
+
+                const publicacionId = result.data.id;
+                const sqrImgDir = `./optimized/square-${filename}`;
+                const regImgDir = `./optimized/medium-${filename}`;
+                const image = await ImageService.create({publicacionId , square: sqrImgDir, regular: regImgDir });
+                imgHelper.regular(req.file.path, `medium-${filename}`, 700);
+                imgHelper.square(req.file.path, `square-${filename}`, 600);
+                
                 !result.data
                 ? res.status(400).json(result)
                 : res.status(200).json(result);

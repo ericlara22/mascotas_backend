@@ -7,7 +7,7 @@ const {PublicacionController} = require('../controllers');
 
 router.get('/', PublicacionController.findAll);
 router.get('/:id', PublicacionController.findOne);
-router.post('/', authentication, PublicacionController.create);
+router.post('/', authentication, imgUpload.single('file'), PublicacionController.create);
 router.put('/disable/:id', authentication, PublicacionController.disable);
 router.put('/:id', authentication, PublicacionController.update);
 router.post('/:id/img', imgUpload.single('file'), PublicacionController.uploadImg);
