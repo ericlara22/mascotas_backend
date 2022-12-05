@@ -1,4 +1,4 @@
-const {models: { PublicacionModel: Model, ImageModel, UserModel, UserDataModel, AnimalModel, TelefonoModel, DireccionModel }} = require('../models');
+const {models: { PublicacionModel: Model, ImageModel, UserModel, UserDataModel, AnimalModel, TelefonoModel, DireccionModel, SexoModel, RazaModel, ComunaModel, EdadModel }} = require('../models');
 const target = 'publicacion';
 
 module.exports = {
@@ -40,7 +40,7 @@ module.exports = {
     getOneById: async (id) => {
         try {
             let result = {};
-            result.data = await Model.findByPk(id, {include:[ {model: ImageModel}, {model: AnimalModel}, {model: UserModel, include: [{model: UserDataModel, as: 'userdata', include: [{model: TelefonoModel}, {model: DireccionModel}] }]} ]});
+            result.data = await Model.findByPk(id, {include:[ {model: ImageModel}, {model: ComunaModel}, {model: AnimalModel, include: [{model: SexoModel}, {model:RazaModel}, {model:EdadModel}] }, {model: UserModel, include: [{model: UserDataModel, as: 'userdata', include: [{model: TelefonoModel}, {model: DireccionModel}] }]} ]});
             if(!result.data){
                 result.message = `No hay registros de ${target} que mostrar con id ${id}`
             } else {
@@ -54,7 +54,7 @@ module.exports = {
     },
 
     update: async (id, query) => {
-        try {
+        try {oM
             let result = {}
             await Model.findByPk(id, {raw: true}).then( async elemento => {
                 if (!elemento){
