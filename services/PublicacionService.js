@@ -54,7 +54,7 @@ module.exports = {
     },
 
     update: async (id, query) => {
-        try {oM
+        try {
             let result = {}
             await Model.findByPk(id, {raw: true}).then( async elemento => {
                 if (!elemento){
